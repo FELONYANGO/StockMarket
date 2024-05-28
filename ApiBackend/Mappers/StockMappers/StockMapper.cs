@@ -23,5 +23,18 @@ namespace ApiBackend.Mappers.StockMappers
                 MarketCap = stock.MarketCap
             };
         }
+
+        //map the stock from CreateStockDto to the stock model
+        public static Stock MapToModel(this CreateStockDto stockDto)
+        {
+            return new Stock
+            {
+                Symbols = stockDto.Symbols,
+                Purchase = stockDto.Purchase,
+                Divident = stockDto.Divident,
+                Industry = stockDto.Industry,
+                MarketCap = stockDto.MarketCap
+            };
+        }
     }
 }
