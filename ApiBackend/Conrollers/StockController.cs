@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ApiBackend.Data;
 using ApiBackend.DTOs.Stock;
 using ApiBackend.Mappers.StockMappers;
+using ApiBackend.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,17 +17,21 @@ namespace ApiBackend.Conrollers
     public class StockController : ControllerBase
     {
      ///the stock 
-      public readonly AppDbContext _context; //make the dbcontext only to be read only
-      public StockController(AppDbContext context)
-      {
-          _context = context;
+    //   public readonly AppDbContext _context; //make the dbcontext only to be read onlyt
+      //implement the stockrepo db context here
+      public readonly StockRepo _repo;
+      //AppDbContext context 
+      public StockController(StockRepo repo)//get the dbcontext
+      { 
+           _repo = repo;
+        //   _context = context;
       }
 
         //get all the stocks using the IActionResult
         [HttpGet]
         public async Task<IActionResult>  GetStocks()
         {
-            var stocks = await _context.Stocks.ToListAsync();
+            var stocks = await  _repo.GetStockAsync();
             var stock = stocks.Select(stock =>stock.MapToDto());
             return Ok(stocks);
         }
@@ -35,7 +40,7 @@ namespace ApiBackend.Conrollers
          [HttpGet("{id}")]
        public async Task<IActionResult> GetStock(int id)
        {
-           var stock = await  _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+           var stock = await  _repo.GetStockByIdAsync(id);
            if (stock == null)
            {
                return NotFound();
@@ -48,50 +53,42 @@ namespace ApiBackend.Conrollers
          public async Task<IActionResult> CreateStock([FromBody] CreateStockDto stockDto)
          {
               var stock = stockDto.MapToModel();
-              await _context.Stocks.AddAsync(stock);
-              await _context.SaveChangesAsync();
+                await _repo.CreateStockAsync(stock);
+                
               return CreatedAtAction(nameof(GetStock), new {id = stock.Id}, stock.MapToDto());
          }
 
          //UPDATE stock using the IAction class and return the updated result
             [HttpPut("{id}")]
-            public async  Task<IActionResult> UpdateStock(int id, [FromBody] CreateStockDto stockDto)
+            public async  Task<IActionResult> UpdateStock(int id, [FromBody] CreateStockDto stockDtoS)
             {
-                var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+                var stock = await _repo.UpdateStockAsync(id, stockDtoS);
                 if (stock == null)
                 {
                     return NotFound();
                 }
-                stock.Symbols = stockDto.Symbols;
-                stock.Purchase = stockDto.Purchase;
-                stock.Divident = stockDto.Divident;
-                stock.Industry = stockDto.Industry;
-                stock.MarketCap = stockDto.MarketCap;
-               await _context.SaveChangesAsync();
+            
+                await _repo.UpdateStockAsync(id, stockDtoS);
                 return Ok(stock.MapToDto());
             }
-public async Task<IActionResult> CreateStock([FromBody] CreateStockDto stockDto)
-         {
-               var stock = stockDto.MapToModel();
-               await _context.Stocks.AddAsync(stock);
-               await _context.SaveChangesAsync();
-               return CreatedAtAction(nameof(GetStock), new {id = stock.Id}, stock.MapToDto());
-         }
+       
             //Delete stock using the IAction and async class and return successfully deleted as a message
             [HttpDelete("{id}")]
             public async Task<IActionResult> DeleteStock(int id)
             {
-                var stock = await _context.Stocks.FindAsync(id);
+                var stock = await _repo.DeleteStockAsync(id);
                 if (stock == null)
                 {
                     return NotFound();
                 }
-                _context.Stocks.Remove(stock);
-                await _context.SaveChangesAsync();
+               
                 return Ok("Successfully deleted");
             }
             
          
      
     }
+
+  
+
 }

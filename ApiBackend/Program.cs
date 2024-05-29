@@ -1,4 +1,5 @@
 using ApiBackend.Data;
+using ApiBackend.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();//adding controllers service
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+//wire the stock repo context
+builder.Services.AddScoped<StockRepo>();
+builder.Services.AddScoped<CommentRepo>();
 
 //connection to tjhe db
 builder.Services.AddDbContext<AppDbContext>(options =>
