@@ -26,5 +26,21 @@ namespace ApiBackend.Conrollers
             var comment = comments.Select(comment => comment.MapToModel());
             return Ok(comment);
         }
+
+        //get by id
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetComment(int id)
+        {
+            var comment = await _repo.GetCommentByIdAsync(id);
+            if (comment == null)
+            {
+                return NotFound();
+            }
+            return Ok(comment.MapToModel());
+        }
     }
+    
+    
+    
+
 }

@@ -14,6 +14,7 @@ namespace ApiBackend.Mappers.CommentMappers
         {
             return new CommentDto
             {
+                Id = commentDto.Id,
                 StockId = commentDto.StockId,
                 Content = commentDto.Content,
                 Title = commentDto.Title

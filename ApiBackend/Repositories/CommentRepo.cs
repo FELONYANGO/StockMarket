@@ -21,6 +21,17 @@ namespace ApiBackend.Repositories
         {
             _context = context;
         }
+
+        public async Task<Comments?> GetCommentByIdAsync(int id)
+        {
+           var comment = await _context.Comments.Include(c => c.Stock).FirstOrDefaultAsync(c => c.Id == id);
+           if (comment == null)
+           {
+               return null;
+           }
+              return comment;
+        }
+
         public async Task<List<Comments>> GetCommentsAsync()
         {
            return  await _context.Comments.ToListAsync();

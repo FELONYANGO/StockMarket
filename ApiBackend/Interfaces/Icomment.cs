@@ -10,5 +10,7 @@ namespace ApiBackend.Interfaces
     {
         //List all comments
         Task<List<Comments>> GetCommentsAsync();
+        //get by id
+        Task<Comments?> GetCommentByIdAsync(int id);
     }
 }

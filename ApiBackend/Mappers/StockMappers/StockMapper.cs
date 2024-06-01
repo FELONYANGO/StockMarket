@@ -2,7 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ApiBackend.DTOs.Comment;
 using ApiBackend.DTOs.Stock;
+using ApiBackend.Interfaces;
+using ApiBackend.Mappers.CommentMappers;
 using ApiBackend.Models;
 
 namespace ApiBackend.Mappers.StockMappers
@@ -20,7 +23,10 @@ namespace ApiBackend.Mappers.StockMappers
                 Purchase = stock.Purchase,
                 Divident = stock.Divident,
                 Industry = stock.Industry,
-                MarketCap = stock.MarketCap
+                MarketCap = stock.MarketCap,
+                //add the comments the comment lists form the 
+                Comments = stock.Comments.Select(comment => comment.MapToModel() ).ToList()
+                
             };
         }
 
