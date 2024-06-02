@@ -43,18 +43,23 @@ namespace ApiBackend.Repositories
 
         public async Task<List<Stock>> GetStockAsync()//get all stocks
         {
-            return await _context.Stocks.ToListAsync();
+            return await _context.Stocks.Include(c=>c.Comments).ToListAsync();
         }
 
         public async Task<Stock?> GetStockByIdAsync(int id) //get stock by id
         {
-            var stock = await _context.Stocks.FirstOrDefaultAsync(s => s.Id == id);
+            var stock = await _context.Stocks.Include(c=>c.Comments).FirstOrDefaultAsync(s => s.Id == id);
              if (stock == null)
              {
                  return null;
              }
                 return stock;
              
+        }
+
+        public Task<bool> StockExists(int id)
+        {
+            return _context.Stocks.AnyAsync(s => s.Id == id);
         }
 
         public async Task<Stock?> UpdateStockAsync(int id, CreateStockDto stock) //update the stock

@@ -1,6 +1,8 @@
 using ApiBackend.Data;
 using ApiBackend.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,12 @@ builder.Services.AddSwaggerGen();
 //wire the stock repo context
 builder.Services.AddScoped<StockRepo>();
 builder.Services.AddScoped<CommentRepo>();
+//add newtonsoft json
+builder.Services.AddControllers().AddNewtonsoftJson(Options =>
+{
+    Options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
+
 
 //connection to tjhe db
 builder.Services.AddDbContext<AppDbContext>(options =>

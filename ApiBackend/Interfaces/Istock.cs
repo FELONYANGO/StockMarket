@@ -19,5 +19,8 @@ namespace ApiBackend.Properties.Interfaces
          Task<Stock?> UpdateStockAsync(int id, CreateStockDto stockDto);
             //implement the delete stock
          Task<Stock?> DeleteStockAsync(int id);
+         //check if stock exist
+         Task<bool> StockExists(int id);
+      
     }
 }

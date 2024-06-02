@@ -12,5 +12,13 @@ namespace ApiBackend.Interfaces
         Task<List<Comments>> GetCommentsAsync();
         //get by id
         Task<Comments?> GetCommentByIdAsync(int id);
+
+        //create comment
+        Task<Comments> CreateCommentAsync(Comments comment);
+       //update comment
+        Task<Comments?> UpdateCommentAsync(int id, Comments comment);
+        //delete comment
+        Task<Comments?> DeleteCommentAsync(int id);
+
     }
 }

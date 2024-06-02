@@ -19,7 +19,7 @@ namespace ApiBackend.Conrollers
      ///the stock 
     //   public readonly AppDbContext _context; //make the dbcontext only to be read onlyt
       //implement the stockrepo db context here
-      public readonly StockRepo _repo;
+      private readonly StockRepo _repo;
       //AppDbContext context 
       public StockController(StockRepo repo)//get the dbcontext
       { 
