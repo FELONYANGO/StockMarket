@@ -16,6 +16,7 @@ namespace ApiBackend.Conrollers
     [ApiController]
     public class StockController : ControllerBase
     {
+      
      ///the stock 
     //   public readonly AppDbContext _context; //make the dbcontext only to be read onlyt
       //implement the stockrepo db context here
@@ -31,15 +32,22 @@ namespace ApiBackend.Conrollers
         [HttpGet]
         public async Task<IActionResult>  GetStocks()
         {
+            if (!ModelState.IsValid)
+          {
+              return BadRequest(ModelState);
+          }
             var stocks = await  _repo.GetStockAsync();
             var stock = stocks.Select(stock =>stock.MapToDto());
             return Ok(stocks);
         }
        // get one result using id and IAction class
 
-         [HttpGet("{id}")]
+         [HttpGet("{id:int}")]
        public async Task<IActionResult> GetStock(int id)
        {
+        if(!ModelState.IsValid){
+            return BadRequest(ModelState);
+        }
            var stock = await  _repo.GetStockByIdAsync(id);
            if (stock == null)
            {
@@ -52,6 +60,10 @@ namespace ApiBackend.Conrollers
        [HttpPost]
          public async Task<IActionResult> CreateStock([FromBody] CreateStockDto stockDto)
          {
+              if (!ModelState.IsValid)
+              {
+                  return BadRequest(ModelState);
+              }
               var stock = stockDto.MapToModel();
                 await _repo.CreateStockAsync(stock);
                 
@@ -59,9 +71,13 @@ namespace ApiBackend.Conrollers
          }
 
          //UPDATE stock using the IAction class and return the updated result
-            [HttpPut("{id}")]
+            [HttpPut("{id:int}")]
             public async  Task<IActionResult> UpdateStock(int id, [FromBody] CreateStockDto stockDtoS)
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var stock = await _repo.UpdateStockAsync(id, stockDtoS);
                 if (stock == null)
                 {
@@ -73,9 +89,13 @@ namespace ApiBackend.Conrollers
             }
        
             //Delete stock using the IAction and async class and return successfully deleted as a message
-            [HttpDelete("{id}")]
+            [HttpDelete("{id:int}")]
             public async Task<IActionResult> DeleteStock(int id)
             {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
                 var stock = await _repo.DeleteStockAsync(id);
                 if (stock == null)
                 {

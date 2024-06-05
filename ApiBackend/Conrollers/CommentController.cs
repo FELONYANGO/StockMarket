@@ -31,15 +31,23 @@ namespace ApiBackend.Conrollers
         [HttpGet]
         public async Task<IActionResult> GetComments()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var comments = await _repo.GetCommentsAsync();
             var comment = comments.Select(comment => comment.MapToModel());
             return Ok(comment);
         }
 
         //get by id
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetComment(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var comment = await _repo.GetCommentByIdAsync(id);
             if (comment == null)
             {
@@ -49,7 +57,7 @@ namespace ApiBackend.Conrollers
         }
 
         // create commnt attaching stock id and createcomentDto
-        [HttpPost("{stockId}")]
+        [HttpPost("{stockId:int}")]
 
         public async Task<IActionResult> CreateComment([FromRoute] int stockId, CreateCommentDto createCommentDto)
         {
@@ -68,9 +76,13 @@ namespace ApiBackend.Conrollers
         // update usng as Id and updatecommentDto
         [HttpPut]
         //route
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> UpdateComment([FromRoute] int id , UpdateDto updateCommentDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var comment = await _repo.UpdateCommentAsync(id, updateCommentDto.MapToUpdate());
             if (comment == null)
             {
@@ -81,9 +93,13 @@ namespace ApiBackend.Conrollers
         }
 
         //delete comment
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> DeleteComment(int id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             var comment = await _repo.DeleteCommentAsync(id);
             if (comment == null)
             {
